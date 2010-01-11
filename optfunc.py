@@ -62,7 +62,7 @@ def func_to_optionparser(func):
             action = 'store'
         opt.add_option(make_option(
             short_name, long_name, action=action, dest=name, default=example,
-            help = helpdict.get(funcname, '')
+            help = helpdict.get(funcname, '[default %default]')
         ))
     
     return opt, required_args
