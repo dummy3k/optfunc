@@ -83,6 +83,7 @@ def resolve_args(func, argv):
             parser._errors.append('Required %d arguments, got %d' % (
                 len(required_args), len(args)
             ))
+            parser._errors.append(parser.get_usage())
     
     # Ensure there are enough arguments even if some are missing
     args += [None] * (len(required_args) - len(args))

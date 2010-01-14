@@ -112,7 +112,10 @@ class TestOptFunc(unittest.TestCase):
         
         e = StringIO()
         optfunc.run(strict_func, [], stderr=e)
-        self.assertEqual(e.getvalue().strip(), 'Required 1 arguments, got 0')
+        self.assertEqual(
+                e.getvalue().strip(),
+                'Required 1 arguments, got 0\nUsage: test.py [options]'
+        )
         
         @optfunc.notstrict
         def notstrict_func(one):
@@ -175,7 +178,8 @@ class TestOptFunc(unittest.TestCase):
         executed = []
         optfunc.run([one, two], ['one'], stderr=e)
         self.assertEqual(
-            e.getvalue().strip(), 'one: Required 1 arguments, got 0'
+            e.getvalue().strip(),
+            'one: Required 1 arguments, got 0\nUsage: test.py [options]'
         )
     
     def test_multiple_valid_subcommand_valid_argument(self):
