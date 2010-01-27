@@ -57,7 +57,10 @@ def func_to_optionparser(func):
         short_name = '-%s' % short
         long_name = '--%s' % name.replace('_', '-')
         if example in (True, False, bool):
-            action = 'store_true'
+            if example:
+                action = 'store_false'
+            else:
+                action = 'store_true'
         else:
             action = 'store'
         opt.add_option(make_option(
