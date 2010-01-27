@@ -34,7 +34,11 @@ def func_to_optionparser(func):
         required_args = args[argstart:]
     
     # Build the OptionParser:
-    opt = ErrorCollectingOptionParser(usage = func.__doc__)
+    if not func.__doc__:
+        usage = 'Usage: %%prog %s [options]' % (' '.join(required_args))
+    else:
+        usage = func.__doc__
+    opt = ErrorCollectingOptionParser(usage=usage)
     
     helpdict = getattr(func, 'optfunc_arghelp', {})
     

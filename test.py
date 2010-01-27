@@ -132,7 +132,7 @@ class TestOptFunc(unittest.TestCase):
         optfunc.run(strict_func, [], stderr=e)
         self.assertEqual(
                 e.getvalue().strip(),
-                'Required 1 arguments, got 0\nUsage: test.py [options]'
+                'Required 1 arguments, got 0\nUsage: test.py one [options]'
         )
         
         @optfunc.notstrict
@@ -197,7 +197,7 @@ class TestOptFunc(unittest.TestCase):
         optfunc.run([one, two], ['one'], stderr=e)
         self.assertEqual(
             e.getvalue().strip(),
-            'one: Required 1 arguments, got 0\nUsage: test.py [options]'
+            'one: Required 1 arguments, got 0\nUsage: test.py arg [options]'
         )
     
     def test_multiple_valid_subcommand_valid_argument(self):
