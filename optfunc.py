@@ -60,7 +60,7 @@ def func_to_optionparser(func):
         shortnames.add(short)
         short_name = '-%s' % short
         long_name = '--%s' % name.replace('_', '-')
-        if example in (True, False, bool):
+        if any(example is x for x in (True, False, bool)):
             if example:
                 action = 'store_false'
             else:
