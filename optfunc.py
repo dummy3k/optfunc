@@ -143,9 +143,12 @@ def run(
         try:
             return func(**resolved)
         except Exception, e:
-            if include_func_name_in_errors:
-                stderr.write('%s: ' % func.__name__)
-            stderr.write(str(e) + '\n')
+            if __debug__:
+                raise
+            else:
+                if include_func_name_in_errors:
+                    stderr.write('%s: ' % func.__name__)
+                stderr.write(str(e) + '\n')
     else:
         if include_func_name_in_errors:
             stderr.write('%s: ' % func.__name__)
