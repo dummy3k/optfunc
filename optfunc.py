@@ -34,7 +34,11 @@ def func_to_optionparser(func):
         required_args = args[argstart:]
     
     # Build the OptionParser:
-    opt = ErrorCollectingOptionParser(usage = func.__doc__)
+    if not func.__doc__:
+        usage = 'Usage: %%prog %s [options]' % (' '.join(required_args))
+    else:
+        usage = func.__doc__
+    opt = ErrorCollectingOptionParser(usage=usage)
     
     helpdict = getattr(func, 'optfunc_arghelp', {})
     
@@ -56,13 +60,16 @@ def func_to_optionparser(func):
         shortnames.add(short)
         short_name = '-%s' % short
         long_name = '--%s' % name.replace('_', '-')
-        if example in (True, False, bool):
-            action = 'store_true'
+        if any(example is x for x in (True, False, bool)):
+            if example:
+                action = 'store_false'
+            else:
+                action = 'store_true'
         else:
             action = 'store'
         opt.add_option(make_option(
             short_name, long_name, action=action, dest=name, default=example,
-            help = helpdict.get(funcname, '')
+            help = helpdict.get(funcname, '[default %default]')
         ))
     
     return opt, required_args
@@ -83,6 +90,7 @@ def resolve_args(func, argv):
             parser._errors.append('Required %d arguments, got %d' % (
                 len(required_args), len(args)
             ))
+            parser._errors.append(parser.get_usage())
     
     # Ensure there are enough arguments even if some are missing
     args += [None] * (len(required_args) - len(args))

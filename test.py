@@ -61,6 +61,24 @@ class TestOptFunc(unittest.TestCase):
         optfunc.run(func, ['required2'])
         self.assert_(has_run[0])
         self.assertEqual(has_run[0], ('required2', ''))
+
+    def test_boolean_option(self):
+
+        has_run = [False]
+        def func(true=True, false=False):
+            has_run[0] = (true, false)
+        
+        # Should execute
+        self.assert_(not has_run[0])
+        optfunc.run(func, [])
+        self.assert_(has_run[0])
+        self.assertEqual(has_run[0], (True, False))
+        
+        # -f should store_false, -t should store_true
+        has_run[0] = False
+        optfunc.run(func, ['-f', '-t'])
+        self.assert_(has_run[0])
+        self.assertEqual(has_run[0], (False, True))
     
     def test_options_are_correctly_named(self):
         def func1(one, option='', verbose=False):
@@ -112,7 +130,10 @@ class TestOptFunc(unittest.TestCase):
         
         e = StringIO()
         optfunc.run(strict_func, [], stderr=e)
-        self.assertEqual(e.getvalue().strip(), 'Required 1 arguments, got 0')
+        self.assertEqual(
+                e.getvalue().strip(),
+                'Required 1 arguments, got 0\nUsage: test.py one [options]'
+        )
         
         @optfunc.notstrict
         def notstrict_func(one):
@@ -175,7 +196,8 @@ class TestOptFunc(unittest.TestCase):
         executed = []
         optfunc.run([one, two], ['one'], stderr=e)
         self.assertEqual(
-            e.getvalue().strip(), 'one: Required 1 arguments, got 0'
+            e.getvalue().strip(),
+            'one: Required 1 arguments, got 0\nUsage: test.py arg [options]'
         )
     
     def test_multiple_valid_subcommand_valid_argument(self):
